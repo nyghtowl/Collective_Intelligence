@@ -33,7 +33,7 @@ def mutually_rated_items(prefs,p1,p2):
 
 # Euclidean Distance Score returns a distance-based similarity score for person1 and person2
 def sim_distance(prefs,person1,person2):
-    si=mutually_rated_items(pref,person1,person2)
+    si=mutually_rated_items(prefs,person1,person2)
 
     # If they have not ratings in common, return 0
     if len(si)==0: return 0
@@ -69,6 +69,58 @@ def sim_pearson(prefs,p1,p2):
     den = sqrt((sum1Sqr-pow(sum1,2)/si_len)*(sum2Sqr-pow(sum2,2)/si_len))
     if den==0: return 0
 
-    score=num/den
+    coefficient=num/den
 
-    return score
+    return coefficient
+
+# Best matches for person from critics dictionary
+# Number of results and similarity function are optional params.
+def topMatches(prefs,person,n=5,similarity=sim_pearson):
+    scores=[(similarity(prefs,person,other),other) for other in prefs if other != person] # creates tuple of pearson score and cooresponding person
+
+    # Sort the list so the highest scores appear at the top
+    scores.sort()
+    scores.reverse()
+    return scores[0:n]
+
+#Get recommendations for a person by using a weighted average of evey other user's rankings
+def getRecommendations(prefs,person,similarity=sim_pearson):
+    totals={}
+    simSums={}
+    for other in prefs:
+        # Don't compare me to myself
+        if other == person: continue
+        sim=similarity(prefs,person,other)
+
+        # Ignore scores of zero or lower
+        if sim <= 0: continue
+        for item in prefs[other]:
+
+            # Only score movies I haven't seen yet
+            if item not in prefs[person] or prefs[person][item] == 0:
+                # Similarity * Score
+                totals.setdefault(item,0)
+                totals[item]+= prefs[other][item]*sim
+                # Sum of similarities
+                simSums.setdefault(item,0)
+                simSums[item]+=sim
+
+    # Create the normalized list
+    rankings = [(total/simSums[item], item) for item, total in totals.items()]
+
+    # Return the sorted list
+    rankings.sort()
+    rankings.reverse()
+    return rankings
+
+# Transform dictionary to find movie recommendations based on a movie watched
+
+def transformPrefs(prefs):
+    result={}
+    for person in prefs:
+        for item in prefs[person]:
+            result.setdefault(item,{})
+
+            # Flip item and person
+            result[item][person]=prefs[person][item]
+    return result
