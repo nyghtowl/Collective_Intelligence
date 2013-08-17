@@ -144,6 +144,7 @@ def calculateSimilarItems(prefs, n=10):
         result[item]=scores
     return result
 
+# Get similarity recommendations based on item similarity score database.
 def getRecommendedItems(prefs, itemMatch, user):
     userRatings=prefs[user]
     scores={}
@@ -172,5 +173,23 @@ def getRecommendedItems(prefs, itemMatch, user):
     # Return the rankings from highest to lowest
     rankings.sort()
     rankings.reverse()
-    
+
     return rankings
+
+# Load database from grouplens.org Movie Lens Data Sets 100K
+def loadMovieLens(path='./data'):
+
+    # Get movie titles
+    movies={}
+    for line in open(path+'/u.item'):
+        (id, title)=line.split('|')[0:2]
+        movies[id]=title
+
+    # Load data
+    prefs={}
+    for line in open(path+'/u.data'):
+        (user,movieid,rating,ts)=line.split('\t')
+        prefs.setdefault(user,{})
+        prefs[user][movies[movieid]]=float(rating)
+    return prefs
+

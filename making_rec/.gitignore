@@ -20,10 +20,13 @@ env
 tmp
 
 # Installer logs
-pip-log.txt
+piplog.txt
 
 #Mr Developer
 .mr.developer.cfg
 
 #DB Migrations
 db_repository
+
+data
+
