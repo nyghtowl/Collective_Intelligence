@@ -58,7 +58,7 @@ def main():
     wordlist=[]
     for w,bc in apcount.items():
         frac=float(bc)/len(feedlist)
-        if frac > 0.1 and fac < 0.5: wordlist.append(w)
+        if frac > 0.1 and frac < 0.5: wordlist.append(w)
 
     out=file('blogdata.txt','w')
     out.write('Blog')
