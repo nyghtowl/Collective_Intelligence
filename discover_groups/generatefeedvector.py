@@ -35,21 +35,23 @@ def getwords(html):
     words=re.compile(r'[A-Z^a-z]+').split(txt)
 
     # Convert to lowercase
-    return [word.lower()] for word in words if word!='']
+    return [word.lower() for word in words if word!='']
 
 # Loop through feeds and generate dataset
 def main():
     apcount={}
     wordscounts={}
-    feedlist=[]
-    for feedurl in files('feedlist.txt'):
-        feedlist.add(feedurl)
-        title, wc=getwordcounts(feedurl)
-        wordcounts[title]=wc
-        for word, count in wc.items():
-            apcount.setdefault(word,0)
-            if count > 1:
-                apcount[word]+=1
+    feedlist=[line for line in file('feelist.txt')]
+    for feedurl in feedlist:
+        try:
+            (title, wc) = getwordcounts(feedurl)
+            wordcounts[title]=wc
+            for word, count in wc.items():
+                apcount.setdefault(word,0)
+                if count > 1:
+                    apcount[word]+=1
+        except:
+            print 'Failed to parse feed %s' % feedurl
 
 # # Limit the data set to frequencies within a certain range
 # def data_boundaries():
