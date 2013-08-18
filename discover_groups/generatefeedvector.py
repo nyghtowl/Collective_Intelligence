@@ -40,8 +40,8 @@ def getwords(html):
 # Loop through feeds and generate dataset
 def main():
     apcount={}
-    wordscounts={}
-    feedlist=[line for line in file('feelist.txt')]
+    wordcounts={}
+    feedlist=[line for line in file('feedlist.txt')]
     for feedurl in feedlist:
         try:
             (title, wc) = getwordcounts(feedurl)
