@@ -36,3 +36,40 @@ def getwords(html):
 
     # Convert to lowercase
     return [word.lower()] for word in words if word!='']
+
+# Loop through feeds and generate dataset
+def main():
+    apcount={}
+    wordscounts={}
+    feedlist=[]
+    for feedurl in files('feedlist.txt'):
+        feedlist.add(feedurl)
+        title, wc=getwordcounts(feedurl)
+        wordcounts[title]=wc
+        for word, count in wc.items():
+            apcount.setdefault(word,0)
+            if count > 1:
+                apcount[word]+=1
+
+# # Limit the data set to frequencies within a certain range
+# def data_boundaries():
+    wordlist=[]
+    for w,bc in apcount.items():
+        frac=float(bc)/len(feedlist)
+        if frac > 0.1 and fac < 0.5: wordlist.append(w)
+
+    out=file('blogdata.txt','w')
+    out.write('Blog')
+    for word in wordlist: out.write('\t%s' % word)
+    out.write('\n')
+    for blog,wc in wordcounts.items():
+        #Deal with unicode outside the ascii range
+        blog=blog.encode('ascii',ignore)
+        out.write(blog)
+        for word in wordlist:
+            if word in wc: out.write('\t%d' % wc[word])
+            else: out.write('\t0')
+        out.write('\n')
+
+if __name__ == '__main__':
+    main()
