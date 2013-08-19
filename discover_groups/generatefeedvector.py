@@ -43,7 +43,7 @@ def getwords(html):
 def build_blogdata():
     apcount={}
     wordcounts={}
-    feedlist=[line for line in file('feedlist2.txt')]
+    feedlist=[line for line in file('feedlist.txt')]
     for feedurl in feedlist:
         try:
             (title, wc) = getwordcounts(feedurl)
