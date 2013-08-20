@@ -119,29 +119,9 @@ def getheight(clust):
 # Return total cluster depth
 def getdepth(clust):
     # The distance of an endpoint is 0.0
-    if clust.left==None and clust.righ==None: return 0
+    if clust.left==None and clust.right==None: return 0
     # The distance of a branch is the greater of its two sides plus its own distance
     return max(getdepth(clust.left),getdepth(clust.right))+clust.distance
-
-# New image created with boundaries in width and height
-def drawdendrogram(clust, labels, jpeg='clusters.jpg'):
-    # Height and width
-    h=getheight(clust)*20
-    w=1200
-    depth=getdepth(clust)
-
-    # Width is fixed, so scale distances accordingly
-    scaling=float(w-150)/depth
-
-    # Create a new image with a white background
-    img=Image.new('RGB',(w,h),(255,255,255))
-    draw=ImageDraw.Draw(img)
-
-    draw.line((0,h/2,10,h/2),fill=(255,0,0))
-
-    # Draw the first node
-    drawnode(draw,clust,10,(h/2),scaling,labels)
-    img.save(jpeg,"JPEG")
 
 def drawnode(draw, clust, x, y, scaling, labels):
     if clust.id<0:
@@ -166,3 +146,23 @@ def drawnode(draw, clust, x, y, scaling, labels):
     else:
         # If this is an endpoint, draw the item label
         draw.text((x+5,y-7),labels[clust.id],(0,0,0))
+
+# New image created with boundaries in width and height
+def drawdendrogram(clust, labels, jpeg='clusters.jpg'):
+    # Height and width
+    h=getheight(clust)*20
+    w=1200
+    depth=getdepth(clust)
+
+    # Width is fixed, so scale distances accordingly
+    scaling=float(w-150)/depth
+
+    # Create a new image with a white background
+    img=Image.new('RGB',(w,h),(255,255,255))
+    draw=ImageDraw.Draw(img)
+
+    draw.line((0,h/2,10,h/2),fill=(255,0,0))
+
+    # Draw the first node
+    drawnode(draw,clust,10,(h/2),scaling,labels)
+    img.save(jpeg,'JPEG')
