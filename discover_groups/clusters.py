@@ -166,3 +166,11 @@ def drawdendrogram(clust, labels, jpeg='clusters.jpg'):
     # Draw the first node
     drawnode(draw,clust,10,(h/2),scaling,labels)
     img.save(jpeg,'JPEG')
+
+
+def rotatematrix(data):
+    newdata=[]
+    for i in range(len(data[0])):
+        newrow=[data[j][i] for j in range(len(data))]
+        newdata.append(newrow)
+    return newdata
